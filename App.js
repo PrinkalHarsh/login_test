@@ -69,7 +69,7 @@ const App = () => {
             // const jsonValue = JSON.stringify(value)
             await AsyncStorage.setItem('userToken', userToken);
           } catch (e) {
-            console.log('catch', e);
+            console.log('catch login', e);
           }
         } else {
           console.log('not called');
@@ -81,11 +81,10 @@ const App = () => {
         // setUserToken(null);
         // setIsLoading(false);
         try {
-          userToken = 'Prinkal';
           // const jsonValue = JSON.stringify(value)
-          await AsyncStorage.removeItem('userToken', userToken);
+          await AsyncStorage.removeItem('userToken');
         } catch (e) {
-          console.log('catch', e);
+          console.log('catch lo out', e);
         }
         dispatch({type: 'LOGOUT'});
       },
