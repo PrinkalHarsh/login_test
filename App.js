@@ -1,10 +1,9 @@
 import 'react-native-gesture-handler';
-import React, {useState, useEffect, useMemo, useContext} from 'react';
-import {View} from 'react-native';
+import React, {useEffect} from 'react';
+import {View, ActivityIndicator} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {SigninScreen, WelcomeScreen} from '@screens';
-import {ActivityIndicator} from 'react-native';
 import {AuthContext} from '@components';
 import AsyncStorage from '@react-native-community/async-storage';
 
@@ -63,7 +62,7 @@ const App = () => {
         // setIsLoading(false);
         let userToken;
         userToken = null;
-        if (userName == 'User' && password == 'Pass') {
+        if (userName != '' && password != '') {
           try {
             userToken = 'Prinkal';
             // const jsonValue = JSON.stringify(value)
@@ -124,9 +123,6 @@ const App = () => {
           ) : (
             <Stack.Screen name="signin" component={SigninScreen} />
           )}
-
-          {/* <Stack.Screen name="signin" component={SigninScreen} />
-          <Stack.Screen name="welcome" component={WelcomeScreen} /> */}
         </Stack.Navigator>
       </NavigationContainer>
     </AuthContext.Provider>

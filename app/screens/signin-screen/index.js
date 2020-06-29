@@ -10,7 +10,7 @@ import {
 import styles from './style';
 import {AuthContext} from '@components';
 
-export const SigninScreen = (props) => {
+export const SigninScreen = () => {
   const [userName, setName] = useState('');
   const [password, setPassword] = useState('');
 
@@ -30,9 +30,7 @@ export const SigninScreen = (props) => {
   const {signIn} = React.useContext(AuthContext);
 
   const loginHandle = (userName, password) => {
-    console.log('yes im pressed');
     signIn(userName, password);
-    console.log('data', userName, password);
   };
 
   return (
