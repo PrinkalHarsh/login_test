@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import styles from './style';
 import {AuthContext} from '@components';
+import Navigation from '@navigation';
 
 export const SigninScreen = () => {
   const [userName, setName] = useState('');
@@ -31,6 +32,7 @@ export const SigninScreen = () => {
 
   const loginHandle = (userName, password) => {
     signIn(userName, password);
+    console.log('username and password', userName, password);
   };
 
   return (

@@ -1,18 +1,13 @@
-import 'react-native-gesture-handler';
 import React, {useEffect} from 'react';
 import {View, ActivityIndicator} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
-import {createStackNavigator} from '@react-navigation/stack';
-import {SigninScreen, WelcomeScreen} from '@screens';
-import {AuthContext} from '@components';
+import Navigation from '@navigation';
 import AsyncStorage from '@react-native-community/async-storage';
-
-const Stack = createStackNavigator();
+import {AuthContext} from '@components';
 
 const App = () => {
   // const [isLoading, setIsLoading] = React.useState(true);
   // const [userToken, setUserToken] = React.useState(null);
-
   const initialLoginState = {
     isLoading: true,
     userName: null,
@@ -50,10 +45,19 @@ const App = () => {
         };
     }
   };
+
   const [loginState, dispatch] = React.useReducer(
     loginReducer,
     initialLoginState,
   );
+
+  if (loginState.isLoading) {
+    return (
+      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
 
   const authContext = React.useMemo(
     () => ({
@@ -107,26 +111,12 @@ const App = () => {
     }, 1000);
   }, []);
 
-  if (loginState.isLoading) {
-    return (
-      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-        <ActivityIndicator size="large" />
-      </View>
-    );
-  }
   return (
     <AuthContext.Provider value={authContext}>
       <NavigationContainer>
-        <Stack.Navigator headerMode="none">
-          {loginState.userToken != null ? (
-            <Stack.Screen name="welcome" component={WelcomeScreen} />
-          ) : (
-            <Stack.Screen name="signin" component={SigninScreen} />
-          )}
-        </Stack.Navigator>
+        <Navigation />
       </NavigationContainer>
     </AuthContext.Provider>
   );
 };
-
 export default App;
