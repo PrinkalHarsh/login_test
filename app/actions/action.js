@@ -29,6 +29,6 @@ export const actions = (dispatch) => ({
     } catch (e) {
       console.log('catch lo out', e);
     }
-    dispatch({type: 'LOGOUT', token: null});
+    dispatch({type: 'LOGOUT'});
   },
 });

@@ -1,15 +1,16 @@
-import 'react-native-gesture-handler';
+// import 'react-native-gesture-handler';
 import React, {useEffect} from 'react';
 import {View, ActivityIndicator} from 'react-native';
-import {SigninScreen, WelcomeScreen} from '@screens';
-import {createStackNavigator} from '@react-navigation/stack';
+import {Navigation} from '@navigation';
+// import {SigninScreen, WelcomeScreen} from '@screens';
+// import {createStackNavigator} from '@react-navigation/stack';
 import {NavigationContainer} from '@react-navigation/native';
 import {initialLoginState, loginReducer} from '@reducers';
 import {actions} from '@actions';
 import AsyncStorage from '@react-native-community/async-storage';
 import {AuthContext} from '@components';
 
-const Stack = createStackNavigator();
+// const Stack = createStackNavigator();
 
 const App = () => {
   const [loginState, dispatch] = React.useReducer(
@@ -46,13 +47,7 @@ const App = () => {
   return (
     <AuthContext.Provider value={authContext}>
       <NavigationContainer>
-        <Stack.Navigator headerMode="none">
-          {loginState.userToken != null ? (
-            <Stack.Screen name="welcome" component={WelcomeScreen} />
-          ) : (
-            <Stack.Screen name="signin" component={SigninScreen} />
-          )}
-        </Stack.Navigator>
+        <Navigation loginState={loginState} />
       </NavigationContainer>
     </AuthContext.Provider>
   );
