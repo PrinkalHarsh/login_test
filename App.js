@@ -1,99 +1,23 @@
+import 'react-native-gesture-handler';
 import React, {useEffect} from 'react';
 import {View, ActivityIndicator} from 'react-native';
+import {SigninScreen, WelcomeScreen} from '@screens';
+import {createStackNavigator} from '@react-navigation/stack';
 import {NavigationContainer} from '@react-navigation/native';
-import Navigation from '@navigation';
+import {initialLoginState, loginReducer} from '@reducers';
+import {actions} from '@actions';
 import AsyncStorage from '@react-native-community/async-storage';
 import {AuthContext} from '@components';
 
+const Stack = createStackNavigator();
+
 const App = () => {
-  // const [isLoading, setIsLoading] = React.useState(true);
-  // const [userToken, setUserToken] = React.useState(null);
-  const initialLoginState = {
-    isLoading: true,
-    userName: null,
-    userToken: null,
-  };
-
-  const loginReducer = (prevState, action) => {
-    switch (action.type) {
-      case 'RETRIEVE_TOKEN':
-        return {
-          ...prevState,
-          userToken: action.token,
-          isLoading: false,
-        };
-      case 'LOGIN':
-        return {
-          ...prevState,
-          userName: action.id,
-          userToken: action.token,
-          isLoading: false,
-        };
-      case 'LOGOUT':
-        return {
-          ...prevState,
-          userName: null,
-          userToken: null,
-          isLoading: false,
-        };
-      case 'REGISTER':
-        return {
-          ...prevState,
-          userName: action.id,
-          userToken: action.token,
-          isLoading: false,
-        };
-    }
-  };
-
   const [loginState, dispatch] = React.useReducer(
-    loginReducer,
+    (prevState, action) => loginReducer(prevState, action),
     initialLoginState,
   );
 
-  if (loginState.isLoading) {
-    return (
-      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-        <ActivityIndicator size="large" />
-      </View>
-    );
-  }
-
-  const authContext = React.useMemo(
-    () => ({
-      signIn: async (userName, password) => {
-        // setUserToken('Prinkal');
-        // setIsLoading(false);
-        let userToken;
-        userToken = null;
-        if (userName != '' && password != '') {
-          try {
-            userToken = 'Prinkal';
-            // const jsonValue = JSON.stringify(value)
-            await AsyncStorage.setItem('userToken', userToken);
-          } catch (e) {
-            console.log('catch login', e);
-          }
-        } else {
-          console.log('not called');
-        }
-        console.log('user Token', userToken);
-        dispatch({type: 'LOGIN', id: userName, token: userToken});
-      },
-      logOut: async () => {
-        // setUserToken(null);
-        // setIsLoading(false);
-        try {
-          // const jsonValue = JSON.stringify(value)
-          await AsyncStorage.removeItem('userToken');
-        } catch (e) {
-          console.log('catch lo out', e);
-        }
-        dispatch({type: 'LOGOUT'});
-      },
-    }),
-    [],
-  );
+  const authContext = React.useMemo(() => actions(dispatch), []);
 
   useEffect(() => {
     setTimeout(async () => {
@@ -111,12 +35,27 @@ const App = () => {
     }, 1000);
   }, []);
 
+  if (loginState.isLoading) {
+    return (
+      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
+
   return (
     <AuthContext.Provider value={authContext}>
       <NavigationContainer>
-        <Navigation />
+        <Stack.Navigator headerMode="none">
+          {loginState.userToken != null ? (
+            <Stack.Screen name="welcome" component={WelcomeScreen} />
+          ) : (
+            <Stack.Screen name="signin" component={SigninScreen} />
+          )}
+        </Stack.Navigator>
       </NavigationContainer>
     </AuthContext.Provider>
   );
 };
+
 export default App;

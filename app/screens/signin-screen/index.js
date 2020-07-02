@@ -9,7 +9,6 @@ import {
 } from 'react-native';
 import styles from './style';
 import {AuthContext} from '@components';
-import Navigation from '@navigation';
 
 export const SigninScreen = () => {
   const [userName, setName] = useState('');
